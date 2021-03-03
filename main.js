@@ -26,13 +26,7 @@ const brickHeight = 20;
 const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
-const bricks = [];
-for(let c = 0; c < brickColumnCount; c++){
-    bricks[c] = [];
-    for (let r = 0; r < brickRowCount; r++){
-        bricks[c][r] = {x:0, y:0, status:1};
-    }
-}
+const bricks = initBricks();
 
 //Movement
 let rightPressed = false;
@@ -41,6 +35,17 @@ let leftPressed = false;
 //Color
 const randomColorArray = ["red", "blue", "green", "orange", "purple", "yellow", "cyan", "peachpuff"];
 let randomColor = "red";
+
+function initBricks(){
+    let newBricks = [];
+    for(let c = 0; c < brickColumnCount; c++){
+        newBricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++){
+            newBricks[c][r] = {x:0, y:0, status:1};
+        }
+    }
+    return newBricks;
+}
 
 function drawBricks(){
     for(let c = 0; c < brickColumnCount; c++){
