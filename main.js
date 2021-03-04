@@ -121,7 +121,7 @@ function draw(){
         else{
             lives--;
             if(!lives){
-                alert("GAME OVER!");
+                alert("OHHH HES HURT!");
                 document.location.reload();
             } 
             else{
