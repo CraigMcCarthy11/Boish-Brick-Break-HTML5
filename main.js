@@ -37,6 +37,10 @@ let bricksLeft = (brickRowCount * brickColumnCount);
 let rightPressed = false;
 let leftPressed = false;
 
+//Touch Movement
+let isTouch = false;
+let paddleTouchMoveToPos = 0;
+
 //Color
 const randomColorArray = ["red", "blue", "green", "orange", "purple", "yellow", "cyan", "peachpuff"];
 let randomColor = "red";
@@ -106,6 +110,8 @@ function drawLevel(){
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (isTouch)
+        handleTouchMovement();
     drawBall();
     drawPaddle();
     collisionDetection();
@@ -253,6 +259,10 @@ function getRandomInt(max){
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
+//Mobile Handlers
+document.addEventListener("touchstart", touchStartHandler, false);
+document.addEventListener("touchmove", touchMoveHandler, false);
+document.addEventListener("touchend", touchEndHandler, false);
 
 function keyDownHandler(e){
     if(e.key == "ArrowRight" || e.key == "Right"){
@@ -277,6 +287,57 @@ function mouseMoveHandler(e){
     if (relativeX > 0 && relativeX < canvas.width){
         paddleX = relativeX - paddleWidth /2;
     }
+}
+
+function touchStartHandler(e){
+    //Set this touch position to compare for move
+    const relativeX = e.touches[0].clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width){
+        paddleTouchMoveToPos = relativeX - paddleWidth /2;
+    }
+    isTouch = true;
+}
+
+function touchMoveHandler(e){
+    //Update the paddle position to move towards
+    const relativeX = e.touches[0].clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width){
+        paddleTouchMoveToPos = relativeX - paddleWidth /2;
+    }
+}
+
+function touchEndHandler(e){
+    e.preventDefault();
+    //Stop moving
+    rightPressed = false;
+    leftPressed = false;
+    isTouch = false;
+}
+
+function handleTouchMovement(){
+    if (isInRange(paddleTouchMoveToPos)){
+        leftPressed = false;
+        rightPressed = false;
+        paddleX = paddleTouchMoveToPos;
+        console.log("TYPE 3 " + paddleTouchMoveToPos + " " + paddleX);
+    }
+    if (paddleTouchMoveToPos <= paddleX + 10 || paddleTouchMoveToPos <= paddleX - 10){
+        leftPressed = true;
+        rightPressed = false;
+        console.log("TYPE 1 " + paddleTouchMoveToPos + " " + paddleX);
+    }
+    else if (paddleTouchMoveToPos >= paddleX - 10 || paddleTouchMoveToPos >= paddleX + 10){
+        leftPressed = false;
+        rightPressed = true;
+        console.log("TYPE 2 " + paddleTouchMoveToPos + " " + paddleX);
+    }
+}
+
+function isInRange(value){
+    if (value <= paddleX + 10 && value >= paddleX - 10)
+        return true;
+    else
+        return false;
 }
 
 draw();
