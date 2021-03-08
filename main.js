@@ -7,6 +7,10 @@ let y = canvas.height - 30;
 //Game Data
 let score = 0;
 let lives = 3;
+let level = 0;
+let levelsCompleted = 0;
+let newScore = 0;
+
 
 //Ball
 const ballRadius = 10;
@@ -27,6 +31,7 @@ const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 const bricks = initBricks();
+let bricksLeft = (brickRowCount * brickColumnCount);
 
 //Movement
 let rightPressed = false;
@@ -88,13 +93,19 @@ function drawBall(){
 function drawScore(){
     ctx.font = '16px Arial';
     ctx.fillStyle = randomColor;
-    ctx.fillText(`Score: ${score}`, 8, 20);
+    ctx.fillText(`Score: ${score + newScore}`, 8, 20);
 }
 
 function drawLives(){
     ctx.font = '16px Arial';
     ctx.fillStyle = randomColor;
     ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+}
+
+function drawLevel(){
+    ctx.font = '16px Arial';
+    ctx.fillStyle = randomColor;
+    ctx.fillText(`Level: ${level + 1}`, canvas.width - 200, 20);
 }
 
 function draw(){
@@ -107,6 +118,9 @@ function draw(){
     drawBricks();
     drawScore();
     drawLives();
+    drawLevel();
+
+    
     
     //Handling Left/Right walls
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius){
@@ -156,6 +170,9 @@ function draw(){
     x += dx;
     y += dy;
 
+
+
+    //console.log(bricksLeft);
     requestAnimationFrame(draw);
 }
 
@@ -169,15 +186,35 @@ function collisionDetection(){
                     colorChange();
                     b.status = 0;
                     score++;
-                    if (score === brickRowCount * brickColumnCount){
-                        alert("YOU WIN BUCKO");
-                        document.location.reload();
-                    }
+                    bricksLeft--;
+                            if (bricksLeft === 0){
+
+            alert("NEXT LEVEL");        
+            
+            bricksLeft = (brickRowCount * brickColumnCount);
+            console.log(bricksLeft);
+
+            //drawBricks();
+            for(let c = 0; c < brickColumnCount; c++){ //neaten this
+                for(let r = 0; r < brickRowCount; r++){
+                    const e = bricks[c][r];//delete this later maybe
+                    e.status = 1;
+                }
+            }
+            x = canvas.width/2;
+            y = canvas.height-30;
+            dx = 2;
+            dy = -2;
+            paddleX = (canvas.width - paddleWidth)/2;
+            level++;
+        }
                 }
             }
         }
     }
 }
+
+//ballSpeed = baseSpeed + (levelsCompleted * speedMultiplier)
 
 function changeBallSpeed(newSpeed){
     if (newSpeed > 0){
