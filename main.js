@@ -16,6 +16,7 @@ let dy = -2;
 //Paddle
 const paddleHeight = 10;
 const paddleWidth = 75;
+const paddleSide = paddleWidth * .33;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 //Brick
@@ -118,11 +119,21 @@ function draw(){
         dy = -dy;
     }
     else if (y + dy > canvas.height - ballRadius){
-        //Paddle hit detection
-        if (x > paddleX && x < paddleX + paddleWidth){
+        //Paddle Left
+        if (x > paddleX && x < paddleX + paddleSide) {
+            dx = -2;
             dy = -dy;
             changeBallSpeed(Math.round(Math.random()) * 2 - 1);
             colorChange();
+        }
+        //Paddle Right
+        else if (x > paddleX + (paddleWidth - paddleSide)){
+            dx = 2;
+            dy = -dy;
+        }
+        //Paddle Middle
+        else if (x < paddleX + (paddleWidth - paddleSide) && x > paddleX + paddleSide){
+            dy = -dy;
         }
         else{
             lives--;
