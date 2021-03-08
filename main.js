@@ -19,7 +19,7 @@ let dy = -2;
 
 //Paddle
 const paddleHeight = 10;
-const paddleWidth = 500;
+const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 //Brick
