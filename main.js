@@ -141,7 +141,7 @@ function draw(){
             colorChange();
         }
         //Paddle Right
-        else if (x > paddleX + (paddleWidth - paddleSide && x < paddleX + paddleWidth)){
+        else if (x > paddleX + (paddleWidth - paddleSide) && x < paddleX + paddleWidth){
             dx = 2;
             dy = -dy;
         }
