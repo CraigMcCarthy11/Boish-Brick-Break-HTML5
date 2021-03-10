@@ -8,8 +8,8 @@ let y = canvas.height - 30;
 let score = 0;
 let lives = 3;
 let level = 0;
-let levelsCompleted = 0;
 let newScore = 0;
+let levelMultiplier = .5; //multiplier by which we change ball's speed based on levels completed
 
 
 //Ball
@@ -135,7 +135,6 @@ function draw(){
         //Paddle hit detection
         if (x > paddleX && x < paddleX + paddleWidth){
             dy = -dy;
-            changeBallSpeed(Math.round(Math.random()) * 2 - 1);
             colorChange();
         }
         else{
@@ -170,9 +169,6 @@ function draw(){
     x += dx;
     y += dy;
 
-
-
-    //console.log(bricksLeft);
     requestAnimationFrame(draw);
 }
 
@@ -194,10 +190,9 @@ function collisionDetection(){
             bricksLeft = (brickRowCount * brickColumnCount);
             console.log(bricksLeft);
 
-            //drawBricks();
-            for(let c = 0; c < brickColumnCount; c++){ //neaten this
+            for(let c = 0; c < brickColumnCount; c++){  //counts back through bricks and resets their status
                 for(let r = 0; r < brickRowCount; r++){
-                    const e = bricks[c][r];//delete this later maybe
+                    const e = bricks[c][r];
                     e.status = 1;
                 }
             }
@@ -207,6 +202,8 @@ function collisionDetection(){
             dy = -2;
             paddleX = (canvas.width - paddleWidth)/2;
             level++;
+            dx = (2 + (level * levelMultiplier));       //changes ball speed as the level is completed.
+            dy = (-2 - (level * levelMultiplier));
         }
                 }
             }
@@ -214,7 +211,6 @@ function collisionDetection(){
     }
 }
 
-//ballSpeed = baseSpeed + (levelsCompleted * speedMultiplier)
 
 function changeBallSpeed(newSpeed){
     if (newSpeed > 0){
@@ -286,6 +282,12 @@ function mouseMoveHandler(e){
     const relativeX = e.clientX - canvas.offsetLeft;
     if (relativeX > 0 && relativeX < canvas.width){
         paddleX = relativeX - paddleWidth /2;
+    }
+    if (paddleX < 0){
+        paddleX = 0;
+    }
+    if (paddleX + paddleWidth > canvas.width){
+        paddleX = canvas.width - paddleWidth;
     }
 }
 
