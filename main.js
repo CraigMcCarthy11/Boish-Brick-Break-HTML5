@@ -52,7 +52,7 @@ function initBricks(){
     for(let c = 0; c < brickColumnCount; c++){
         newBricks[c] = [];
         for (let r = 0; r < brickRowCount; r++){
-            newBricks[c][r] = {x:0, y:0, status:1};//scoreValue:3};
+            newBricks[c][r] = {x:0, y:0, status:1, scoreValue:3};
         }
     }
     return newBricks;
@@ -80,22 +80,19 @@ function drawBricks(){
                 const br = bricks[c][r];
                 switch(c) {
                     case 0:
-                        // ctx.fillStyle = "green";
-                        // br.scoreValue = 3;
+                        br.scoreValue = 3;
                         ctx.fillStyle = newRandomColorArray[0];
                         ctx.fill();
                         ctx.closePath();
                       break;
                     case 1:
-                        // ctx.fillStyle = "blue";
-                        // br.scoreValue = 2;
+                        br.scoreValue = 2;
                         ctx.fillStyle = newRandomColorArray[1];
                         ctx.fill();
                         ctx.closePath();
                       break;
                     case 2:
-                        // ctx.fillStyle = "orange";
-                        // br.scoreValue = 1;
+                        br.scoreValue = 1;
                         ctx.fillStyle = newRandomColorArray[2];
                         ctx.fill();
                         ctx.closePath();
@@ -227,8 +224,7 @@ function collisionDetection(){
                     dy = -dy;
                     colorChange();
                     b.status = 0;
-                    score++;
-                    // score += b.scoreValue;
+                    score += b.scoreValue;
                     bricksLeft--;
             if (bricksLeft === 0){
 
