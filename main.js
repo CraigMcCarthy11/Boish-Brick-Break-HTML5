@@ -44,20 +44,30 @@ let paddleTouchMoveToPos = 0;
 
 //Color
 const randomColorArray = ["red", "blue", "green", "orange", "purple", "yellow", "cyan", "peachpuff"];
-let randomColor = "red";
+let randomColor = randomColorArray[0];
+let newRandomColorArray = randomColorArray[0];
 
 function initBricks(){
     let newBricks = [];
     for(let c = 0; c < brickColumnCount; c++){
         newBricks[c] = [];
         for (let r = 0; r < brickRowCount; r++){
-            newBricks[c][r] = {x:0, y:0, status:1};
+            newBricks[c][r] = {x:0, y:0, status:1};//scoreValue:3};
         }
     }
     return newBricks;
 }
 
+//used to generate new list of random colors for each individual row
+function createNewColorArray()
+{
+    newRandomColorArray = [colorChange(), colorChange(), colorChange()];
+}
+
+createNewColorArray();
+
 function drawBricks(){
+
     for(let c = 0; c < brickColumnCount; c++){
         for (let r = 0; r < brickRowCount; r++){
             if (bricks[c][r].status == 1){
@@ -67,9 +77,30 @@ function drawBricks(){
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = randomColor;
-                ctx.fill();
-                ctx.closePath();
+                const br = bricks[c][r];
+                switch(c) {
+                    case 0:
+                        // ctx.fillStyle = "green";
+                        // br.scoreValue = 3;
+                        ctx.fillStyle = newRandomColorArray[0];
+                        ctx.fill();
+                        ctx.closePath();
+                      break;
+                    case 1:
+                        // ctx.fillStyle = "blue";
+                        // br.scoreValue = 2;
+                        ctx.fillStyle = newRandomColorArray[1];
+                        ctx.fill();
+                        ctx.closePath();
+                      break;
+                    case 2:
+                        // ctx.fillStyle = "orange";
+                        // br.scoreValue = 1;
+                        ctx.fillStyle = newRandomColorArray[2];
+                        ctx.fill();
+                        ctx.closePath();
+                        break;
+                }
             }
         }
     }
@@ -197,8 +228,9 @@ function collisionDetection(){
                     colorChange();
                     b.status = 0;
                     score++;
+                    // score += b.scoreValue;
                     bricksLeft--;
-                            if (bricksLeft === 0){
+            if (bricksLeft === 0){
 
             alert("NEXT LEVEL");        
             
@@ -218,6 +250,7 @@ function collisionDetection(){
             dy = -2;
             paddleX = (canvas.width - paddleWidth)/2;
             level++;
+            createNewColorArray();
         }
                 }
             }
@@ -259,7 +292,8 @@ function changeBallSpeed(newSpeed){
 }
 
 function colorChange(){
-    randomColor = randomColorArray[getRandomInt(randomColorArray.length)];
+    
+    return randomColor = randomColorArray[getRandomInt(randomColorArray.length)];
 }
 
 function getRandomInt(max){
@@ -350,5 +384,6 @@ function isInRange(value){
     else
         return false;
 }
+
 
 draw();

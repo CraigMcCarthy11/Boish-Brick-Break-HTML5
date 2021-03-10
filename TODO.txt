@@ -1,0 +1,4 @@
+Dylan:
+1.) Each row of bricks get random color and randomized again every match.
+2.) Bricks should give more points per row. Top row 3 points, bottom row 1 point.
+3.) Under the canvas should be an html/css box that is able to display your last points, lives and level values of the last game you played. Alert on loss should show these as well. 
