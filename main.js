@@ -192,13 +192,12 @@ function draw(){
     else if (y + dy > canvas.height - ballRadius){
         //Paddle Left
         if (x > paddleX && x < paddleX + paddleSide) {
-            dx = -2;
+            dx = Math.abs(dx) * -1;
             dy = -dy;
-            colorChange();
         }
         //Paddle Right
         else if (x > paddleX + (paddleWidth - paddleSide) && x < paddleX + paddleWidth){
-            dx = 2;
+            dx = Math.abs(dx);
             dy = -dy;
         }
         //Paddle Middle
