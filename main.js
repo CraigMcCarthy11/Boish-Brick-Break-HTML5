@@ -58,6 +58,35 @@ function initBricks(){
     return newBricks;
 }
 
+// localStorage.removeItem('Score');
+// localStorage.removeItem('Level');
+
+if(localStorage.getItem('Score') == null || localStorage.getItem('Level') == null)
+{
+    console.log('no local score');
+    localStorage.setItem('Score', score);
+    localStorage.setItem('Level', level);
+}
+else {
+    loadGame();
+}
+
+function loadGame()
+{
+    console.log('LOCAL STORAGE');
+    let prevScore = localStorage.getItem('Score');
+    let prevLevel = localStorage.getItem('Level');
+    console.log(prevScore);
+    document.getElementById("prevScore").innerHTML = prevScore.toString();
+    document.getElementById("prevLevel").innerHTML = prevLevel.toString();
+}
+
+function saveGame()
+{
+    localStorage.setItem('Score', score);
+    localStorage.setItem('Level', level);
+}
+
 //used to generate new list of random colors for each individual row
 function createNewColorArray()
 {
@@ -179,7 +208,9 @@ function draw(){
         else{
             lives--;
             if(!lives){
-                alert("OHHH HES HURT!");
+                level = level+1;
+                alert("Game Over!" + "\nScore: " + score + "\nLevel: " + level);
+                saveGame();
                 document.location.reload();
             } 
             else{
@@ -224,10 +255,9 @@ function collisionDetection(){
                     bricksLeft--;
             if (bricksLeft === 0){
 
-            alert("NEXT LEVEL");        
-            
+            alert("NEXT LEVEL");
+
             bricksLeft = (brickRowCount * brickColumnCount);
-            console.log(bricksLeft);
 
             for(let c = 0; c < brickColumnCount; c++){  //counts back through bricks and resets their status
                 for(let r = 0; r < brickRowCount; r++){
@@ -362,17 +392,14 @@ function handleTouchMovement(){
         leftPressed = false;
         rightPressed = false;
         paddleX = paddleTouchMoveToPos;
-        console.log("TYPE 3 " + paddleTouchMoveToPos + " " + paddleX);
     }
     if (paddleTouchMoveToPos <= paddleX + 10 || paddleTouchMoveToPos <= paddleX - 10){
         leftPressed = true;
         rightPressed = false;
-        console.log("TYPE 1 " + paddleTouchMoveToPos + " " + paddleX);
     }
     else if (paddleTouchMoveToPos >= paddleX - 10 || paddleTouchMoveToPos >= paddleX + 10){
         leftPressed = false;
         rightPressed = true;
-        console.log("TYPE 2 " + paddleTouchMoveToPos + " " + paddleX);
     }
 }
 
