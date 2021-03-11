@@ -192,7 +192,6 @@ function draw(){
         if (x > paddleX && x < paddleX + paddleSide) {
             dx = Math.abs(dx) * -1;
             dy = -dy;
-            colorChange();
         }
         //Paddle Right
         else if (x > paddleX + (paddleWidth - paddleSide) && x < paddleX + paddleWidth){
