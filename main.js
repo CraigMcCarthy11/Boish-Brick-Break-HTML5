@@ -7,7 +7,7 @@ let y = canvas.height - 30;
 //Game Data
 let score = 0;
 let lives = 3;
-let level = 0;
+let level = 1;
 let newScore = 0;
 let levelMultiplier = .5; //multiplier by which we change ball's speed based on levels completed
 
@@ -163,7 +163,7 @@ function drawLives(){
 function drawLevel(){
     ctx.font = '16px Arial';
     ctx.fillStyle = randomColor;
-    ctx.fillText(`Level: ${level + 1}`, canvas.width - 200, 20);
+    ctx.fillText(`Level: ${level}`, canvas.width - 200, 20);
 }
 
 function draw(){
@@ -178,8 +178,6 @@ function draw(){
     drawLives();
     drawLevel();
 
-    
-    
     //Handling Left/Right walls
     if (x + dx < ballRadius || x + dx > canvas.width - ballRadius){
         dx = -dx;
@@ -192,13 +190,13 @@ function draw(){
     else if (y + dy > canvas.height - ballRadius){
         //Paddle Left
         if (x > paddleX && x < paddleX + paddleSide) {
-            dx = -2;
+            dx = Math.abs(dx) * -1;
             dy = -dy;
             colorChange();
         }
         //Paddle Right
         else if (x > paddleX + (paddleWidth - paddleSide) && x < paddleX + paddleWidth){
-            dx = 2;
+            dx = Math.abs(dx);
             dy = -dy;
         }
         //Paddle Middle
@@ -208,7 +206,6 @@ function draw(){
         else{
             lives--;
             if(!lives){
-                level = level+1;
                 alert("Game Over!" + "\nScore: " + score + "\nLevel: " + level);
                 saveGame();
                 document.location.reload();
@@ -216,8 +213,7 @@ function draw(){
             else{
                 x = canvas.width/2;
                 y = canvas.height-30;
-                dx = 2;
-                dy = -2;
+                setBallSpeed();
                 paddleX = (canvas.width - paddleWidth)/2;
             }
         }
@@ -239,7 +235,14 @@ function draw(){
     x += dx;
     y += dy;
 
+    console.log(dy, dx);
+
     requestAnimationFrame(draw);
+}
+
+function setBallSpeed(){
+    dx = (2 + (level * levelMultiplier));
+    dy = (-2 - (level * levelMultiplier));
 }
 
 function collisionDetection(){
@@ -253,68 +256,32 @@ function collisionDetection(){
                     b.status = 0;
                     score += b.scoreValue;
                     bricksLeft--;
-            if (bricksLeft === 0){
+                    if (bricksLeft === 0){
 
-            alert("NEXT LEVEL");
+                        alert("NEXT LEVEL");
 
-            bricksLeft = (brickRowCount * brickColumnCount);
+                        bricksLeft = (brickRowCount * brickColumnCount);
 
-            for(let c = 0; c < brickColumnCount; c++){  //counts back through bricks and resets their status
-                for(let r = 0; r < brickRowCount; r++){
-                    const e = bricks[c][r];
-                    e.status = 1;
+                        for(let c = 0; c < brickColumnCount; c++){  //counts back through bricks and resets their status
+                            for(let r = 0; r < brickRowCount; r++){
+                                const e = bricks[c][r];
+                                e.status = 1;
+                            }
+                        }
+                        x = canvas.width/2;
+                        y = canvas.height-30;
+                        paddleX = (canvas.width - paddleWidth)/2;
+                        level++;
+                        createNewColorArray();
+                        setBallSpeed();
+                    }
                 }
             }
-            x = canvas.width/2;
-            y = canvas.height-30;
-            dx = 2;
-            dy = -2;
-            paddleX = (canvas.width - paddleWidth)/2;
-            level++;
-            createNewColorArray();
-            dx = (2 + (level * levelMultiplier));       //changes ball speed as the level is completed.
-            dy = (-2 - (level * levelMultiplier));
-        }
-                }
-            }
-        }
-    }
-}
-
-
-function changeBallSpeed(newSpeed){
-    if (newSpeed > 0){
-        if (dy < 0){
-            dy = dy - newSpeed;
-        }
-        else if (dy > 0){
-            dy = dy + newSpeed;
-        }
-        if (dx < 0){
-            dx = dx - newSpeed;
-        }
-        else if (dx > 0){
-            dx = dx + newSpeed;
-        }
-    }
-    else if (newSpeed < 0 && dy != -1){
-        if (dy < 0){
-            dy = dy - newSpeed;
-        }
-        else if (dy > 0){
-            dy = dy + newSpeed;
-        }
-        if (dx < 0){
-            dx = dx - newSpeed;
-        }
-        else if (dx > 0){
-            dx = dx + newSpeed;
         }
     }
 }
 
 function colorChange(){
-    
     return randomColor = randomColorArray[getRandomInt(randomColorArray.length)];
 }
 
@@ -409,6 +376,5 @@ function isInRange(value){
     else
         return false;
 }
-
 
 draw();
